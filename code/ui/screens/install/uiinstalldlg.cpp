@@ -10,6 +10,7 @@
 #include "always.h"
 
 #include "_ui.h"
+#include "side.hh"
 #include "ui/screens/install/uiinstall.h"
 #include "ui/uienginehost.h"
 #include "ui/uishell.h"
@@ -40,6 +41,10 @@ UIInstallResult UI_Install_Dialog(void)
 		}
 		return(ended);
 	});
+
+	// The install screen renders before the game data is mounted, so its controls read the art
+	// as missing and cache that. Drop the cache so the next screen is rebuilt from the mounted data.
+	UI_On_Archives_Change(SIDE_NONE);
 
 	if (result == UI_RESULT_ACCEPTED) {
 		return(UI_INSTALL_READY);
