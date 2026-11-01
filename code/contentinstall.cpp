@@ -126,7 +126,7 @@ struct ContentTransfer::State
 	bool Budget(void) const;
 	void Note_Speed(int added);
 	void Describe(void);
-	void Begin(bool copying, std::string const & source_folder, bool movies, bool firestorm);
+	void Begin(bool copying, std::string const & source_folder, bool tsmovies, bool firestorm, bool fsmovies);
 	void Open_Part(bool truncate);
 	bool Connect(void);
 	void Step_Next(void);
@@ -215,7 +215,7 @@ void ContentTransfer::State::Describe(void)
 }
 
 
-void ContentTransfer::State::Begin(bool copying, std::string const & source_folder, bool movies, bool firestorm)
+void ContentTransfer::State::Begin(bool copying, std::string const & source_folder, bool tsmovies, bool firestorm, bool fsmovies)
 {
 	Close_IO();
 	copy = copying;
@@ -245,7 +245,7 @@ void ContentTransfer::State::Begin(bool copying, std::string const & source_fold
 	}
 
 	for (ContentFile const & file : Content_Files()) {
-		if (Content_File_Selected(file, movies, firestorm)) {
+		if (Content_File_Selected(file, tsmovies, firestorm, fsmovies)) {
 			files.push_back(&file);
 			total += file.Size;
 		}
@@ -544,15 +544,15 @@ void ContentTransfer::State::Step_Transfer(void)
 }
 
 
-void ContentTransfer::Start_Download(bool movies, bool firestorm)
+void ContentTransfer::Start_Download(bool tsmovies, bool firestorm, bool fsmovies)
 {
-	Data->Begin(false, std::string(), movies, firestorm);
+	Data->Begin(false, std::string(), tsmovies, firestorm, fsmovies);
 }
 
 
-void ContentTransfer::Start_Copy(std::string const & folder, bool movies, bool firestorm)
+void ContentTransfer::Start_Copy(std::string const & folder, bool tsmovies, bool firestorm, bool fsmovies)
 {
-	Data->Begin(true, folder, movies, firestorm);
+	Data->Begin(true, folder, tsmovies, firestorm, fsmovies);
 }
 
 

@@ -86,22 +86,25 @@ TEST_CASE("the catalog pins the freeware files and tibsun is last")
 }
 
 
-TEST_CASE("firestorm and movies add their own files without counting them twice")
+TEST_CASE("each download option adds its own bytes without counting them twice")
 {
-	std::uint64_t base = Content_Download_Bytes(false, false);
-	std::uint64_t movies = Content_Download_Bytes(true, false);
-	std::uint64_t firestorm = Content_Download_Bytes(false, true);
-	std::uint64_t both = Content_Download_Bytes(true, true);
+	std::uint64_t base = Content_Download_Bytes(false, false, false);
+	std::uint64_t tsmovies = Content_Download_Bytes(true, false, false);
+	std::uint64_t firestorm = Content_Download_Bytes(false, true, false);
+	std::uint64_t fsmovies = Content_Download_Bytes(false, false, true);
+	std::uint64_t all = Content_Download_Bytes(true, true, true);
 
 	CHECK_MESSAGE(base == Content_Base_Bytes(), "base game and music are always included");
-	CHECK_MESSAGE(movies > base, "campaign movies add bytes");
-	CHECK_MESSAGE(firestorm > base, "firestorm adds bytes");
-	CHECK_MESSAGE(both > movies, "firestorm still adds bytes when movies are selected");
-	CHECK_MESSAGE(both > firestorm, "movies still add bytes when firestorm is selected");
-	CHECK_MESSAGE(movies - base == Content_Movies_Marginal(false), "the movies line is the bytes movies add without firestorm");
-	CHECK_MESSAGE(both - firestorm == Content_Movies_Marginal(true), "with firestorm, the movies line includes firestorm's movies");
-	CHECK_MESSAGE(firestorm - base == Content_Firestorm_Marginal(false), "the firestorm line is the bytes firestorm adds without movies");
-	CHECK_MESSAGE(both - movies == Content_Firestorm_Marginal(true), "with movies, the firestorm line includes firestorm's movies");
+	CHECK_MESSAGE(tsmovies > base, "tiberian sun campaign cinematics add bytes");
+	CHECK_MESSAGE(firestorm > base, "firestorm game data and music add bytes");
+	CHECK_MESSAGE(fsmovies > base, "firestorm campaign cinematics add bytes");
+	CHECK_MESSAGE(all > tsmovies, "firestorm still adds bytes when tiberian sun cinematics are selected");
+	CHECK_MESSAGE(all > firestorm, "tiberian sun cinematics still add bytes when firestorm is selected");
+	CHECK_MESSAGE(all > fsmovies, "tiberian sun cinematics and firestorm still add bytes when firestorm cinematics are selected");
+	CHECK_MESSAGE(tsmovies - base == Content_TsMovies_Marginal(), "the tiberian sun cinematics line is the bytes they add");
+	CHECK_MESSAGE(firestorm - base == Content_Firestorm_Marginal(), "the firestorm line is the bytes firestorm adds");
+	CHECK_MESSAGE(fsmovies - base == Content_FsMovies_Marginal(), "the firestorm cinematics line is the bytes they add");
+	CHECK_MESSAGE(all - firestorm == Content_TsMovies_Marginal() + Content_FsMovies_Marginal(), "all minus firestorm is both cinematics options");
 	CHECK_MESSAGE(Content_Size_Text(1024ull * 1024ull * 1024ull) == "1.0 GB", "a gibibyte is shown as 1.0 GB");
 	CHECK_MESSAGE(Content_Speed_Text(1.5 * 1024.0 * 1024.0) == "1.5 MB/s", "speed uses the same units");
 }

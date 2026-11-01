@@ -10,7 +10,7 @@
   "r2_buckets": [
     {
       "binding": "GAME",
-      "bucket_name": "siliconsun"
+      "bucket_name": "siliconsun-data"
     }
   ],
   "ratelimits": [

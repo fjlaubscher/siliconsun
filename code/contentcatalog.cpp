@@ -67,7 +67,7 @@ std::span<ContentFile const> Content_Files(void)
 
 char const * Content_Download_Root(void)
 {
-	return("https://siliconsun-content.workers.dev");
+	return("https://siliconsun-content.fjlaubscher.workers.dev");
 }
 
 
@@ -86,17 +86,17 @@ std::string Content_Download_Host(void)
 }
 
 
-bool Content_File_Selected(ContentFile const & file, bool movies, bool firestorm)
+bool Content_File_Selected(ContentFile const & file, bool tsmovies, bool firestorm, bool fsmovies)
 {
 	switch (file.Part) {
 		case CONTENT_PART_BASE:
 			return(true);
 		case CONTENT_PART_MOVIES:
-			return(movies);
+			return(tsmovies);
 		case CONTENT_PART_FIRESTORM:
 			return(firestorm);
 		case CONTENT_PART_FIRESTORM_MOVIES:
-			return(movies && firestorm);
+			return(fsmovies);
 	}
 	return(false);
 }
@@ -108,36 +108,34 @@ std::uint64_t Content_Base_Bytes(void)
 }
 
 
-std::uint64_t Content_Movies_Marginal(bool firestorm)
+std::uint64_t Content_TsMovies_Marginal(void)
 {
-	std::uint64_t total = Part_Bytes(CONTENT_PART_MOVIES);
-	if (firestorm) {
-		total += Part_Bytes(CONTENT_PART_FIRESTORM_MOVIES);
-	}
-	return(total);
+	return(Part_Bytes(CONTENT_PART_MOVIES));
 }
 
 
-std::uint64_t Content_Firestorm_Marginal(bool movies)
+std::uint64_t Content_Firestorm_Marginal(void)
 {
-	std::uint64_t total = Part_Bytes(CONTENT_PART_FIRESTORM);
-	if (movies) {
-		total += Part_Bytes(CONTENT_PART_FIRESTORM_MOVIES);
-	}
-	return(total);
+	return(Part_Bytes(CONTENT_PART_FIRESTORM));
 }
 
 
-std::uint64_t Content_Download_Bytes(bool movies, bool firestorm)
+std::uint64_t Content_FsMovies_Marginal(void)
+{
+	return(Part_Bytes(CONTENT_PART_FIRESTORM_MOVIES));
+}
+
+
+std::uint64_t Content_Download_Bytes(bool tsmovies, bool firestorm, bool fsmovies)
 {
 	std::uint64_t total = Part_Bytes(CONTENT_PART_BASE);
-	if (movies) {
+	if (tsmovies) {
 		total += Part_Bytes(CONTENT_PART_MOVIES);
 	}
 	if (firestorm) {
 		total += Part_Bytes(CONTENT_PART_FIRESTORM);
 	}
-	if (movies && firestorm) {
+	if (fsmovies) {
 		total += Part_Bytes(CONTENT_PART_FIRESTORM_MOVIES);
 	}
 	return(total);

@@ -38,15 +38,17 @@ char const * Content_Download_Root(void);
 
 std::string Content_Download_Host(void);
 
-bool Content_File_Selected(ContentFile const & file, bool movies, bool firestorm);
+bool Content_File_Selected(ContentFile const & file, bool tsmovies, bool firestorm, bool fsmovies);
 
 std::uint64_t Content_Base_Bytes(void);
 
-std::uint64_t Content_Movies_Marginal(bool firestorm);
+std::uint64_t Content_TsMovies_Marginal(void);
 
-std::uint64_t Content_Firestorm_Marginal(bool movies);
+std::uint64_t Content_Firestorm_Marginal(void);
 
-std::uint64_t Content_Download_Bytes(bool movies, bool firestorm);
+std::uint64_t Content_FsMovies_Marginal(void);
+
+std::uint64_t Content_Download_Bytes(bool tsmovies, bool firestorm, bool fsmovies);
 
 std::string Content_Size_Text(std::uint64_t bytes);
 

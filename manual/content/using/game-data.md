@@ -27,7 +27,7 @@ The repository holds the engine source and build inputs. It holds no maps, movie
 
 ## Setup screen
 
-When the data directory has no `TIBSUN.MIX` of at least 10 MB, and the launch is not headless or spawned, the game shows a setup screen before it mounts the archives. Base game and music are included. Campaign movies and Firestorm are optional. Firestorm's movies are included only when both are selected. The screen shows the size of that choice. While a file is transferring it shows how much of that file has arrived and the current speed.
+When the data directory has no `TIBSUN.MIX` of at least 10 MB, and the launch is not headless or spawned, the game shows a setup screen before it mounts the archives. Tiberian Sun game data and music are included. Tiberian Sun campaign cinematics and Firestorm game data and music are optional. Firestorm campaign cinematics are optional on their own. The screen shows the size of each choice. While a file is transferring it shows how much of that file has arrived and the current speed.
 
 A file already in the data directory is kept when its size and checksum match, and skipped. One that is present but does not match is left in place and setup stops. A partial download is kept and resumed. A download that finishes with the wrong checksum is removed. Choosing a folder copies the same selection from that folder, or from an `INSTALL` folder inside it. Quit writes none of the freeware files. Once `TIBSUN.MIX` is at least 10 MB, later launches do not show the screen.
 

@@ -21,8 +21,8 @@ class ContentTransfer
 		ContentTransfer(ContentTransfer const &) = delete;
 		ContentTransfer & operator = (ContentTransfer const &) = delete;
 
-		void Start_Download(bool movies, bool firestorm);
-		void Start_Copy(std::string const & folder, bool movies, bool firestorm);
+		void Start_Download(bool tsmovies, bool firestorm, bool fsmovies);
+		void Start_Copy(std::string const & folder, bool tsmovies, bool firestorm, bool fsmovies);
 		void Cancel(void);
 		void Tick(void);
 		bool Active(void) const;
