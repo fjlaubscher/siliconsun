@@ -33,7 +33,31 @@ body
 
 #notice
 {
-	height: 52dp;
+	height: 32dp;
+}
+
+#source
+{
+	line-height: 14dp;
+	white-space: pre-wrap;
+	font-size: 10dp;
+	height: 14dp;
+}
+
+.divider
+{
+	height: 1dp;
+	margin-top: 6dp;
+	background-color: #4eb6dc;
+}
+
+.hint
+{
+	line-height: 14dp;
+	white-space: pre-wrap;
+	font-size: 10dp;
+	height: 14dp;
+	color: #109010;
 }
 
 #choices
@@ -47,19 +71,17 @@ body
 	align-items: center;
 	height: 22dp;
 	font-size: 12dp;
+	color: #109010;
 }
 
-.option .mark
+.option.active
 {
-	flex: none;
-	width: 16dp;
-	text-align: center;
+	color: #70ff00;
 }
 
 .option .name
 {
 	flex: 1;
-	margin-left: 4dp;
 }
 
 .option .size
@@ -71,6 +93,7 @@ body
 .option.total
 {
 	margin-top: 4dp;
+	color: #70ff00;
 }
 
 #status

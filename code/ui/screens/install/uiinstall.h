@@ -35,13 +35,14 @@ class UIInstallPresenterClass : public UIPresenterClass
 		void Update_Sizes(void);
 
 		ContentTransfer Transfer;
-		bool TsMovies = true;
-		bool Firestorm = true;
-		bool FsMovies = true;
+		bool TsMovies = false;
+		bool Firestorm = false;
+		bool FsMovies = false;
 		bool Busy = false;
 		bool HasError = false;
 		int Percent = 0;
 		std::string Notice;
+		std::string Source;
 		std::string BaseSize;
 		std::string TsMoviesSize;
 		std::string FirestormSize;

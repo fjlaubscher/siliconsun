@@ -16,32 +16,27 @@
 <body data-model="install">
 	<div id="panel">
 		<p id="notice" data-if="!busy">{{notice}}</p>
+		<p id="source" data-if="!busy">{{source}}</p>
+		<div class="divider" data-if="!busy"></div>
+		<p class="hint" data-if="!busy">Click a line to include or skip that part.</p>
 		<div id="choices" data-if="!busy">
-			<div class="option">
-				<span class="mark">●</span>
+			<div class="option active">
 				<span class="name">Tiberian Sun — game data and music</span>
 				<span class="size">{{basesize}}</span>
 			</div>
-			<div class="option" data-event-click="queue('tsmovies', tsmovies ? 0 : 1)">
-				<span class="mark" data-if="tsmovies">●</span>
-				<span class="mark" data-if="!tsmovies">·</span>
+			<div class="option" data-class-active="tsmovies" data-event-click="queue('tsmovies', tsmovies ? 0 : 1)">
 				<span class="name">Tiberian Sun — campaign cinematics</span>
 				<span class="size">{{tsmoviesize}}</span>
 			</div>
-			<div class="option" data-event-click="queue('firestorm', firestorm ? 0 : 1)">
-				<span class="mark" data-if="firestorm">●</span>
-				<span class="mark" data-if="!firestorm">·</span>
+			<div class="option" data-class-active="firestorm" data-event-click="queue('firestorm', firestorm ? 0 : 1)">
 				<span class="name">Firestorm — game data and music</span>
 				<span class="size">{{firestormsize}}</span>
 			</div>
-			<div class="option" data-event-click="queue('fsmovies', fsmovies ? 0 : 1)">
-				<span class="mark" data-if="fsmovies">●</span>
-				<span class="mark" data-if="!fsmovies">·</span>
+			<div class="option" data-class-active="fsmovies" data-event-click="queue('fsmovies', fsmovies ? 0 : 1)">
 				<span class="name">Firestorm — campaign cinematics</span>
 				<span class="size">{{fsmoviesize}}</span>
 			</div>
 			<div class="option total">
-				<span class="mark">·</span>
 				<span class="name">Download size</span>
 				<span class="size">{{totalsize}}</span>
 			</div>
@@ -50,9 +45,9 @@
 		<progress id="bar" data-if="busy" max="100" direction="right" data-attr-value="percent"/>
 		<p id="error" data-if="haserror">{{error}}</p>
 		<div id="actions" data-if="!busy">
-			<button id="download" data-event-click="queue('download')">Download</button>
-			<button id="folder" data-event-click="queue('folder')">Folder</button>
 			<button id="quit" data-event-click="queue('quit')">Quit</button>
+			<button id="folder" data-event-click="queue('folder')">Folder</button>
+			<button id="download" data-event-click="queue('download')">Download</button>
 		</div>
 		<div id="cancel-row" data-if="busy">
 			<button id="cancel" data-event-click="queue('cancel')">Cancel</button>

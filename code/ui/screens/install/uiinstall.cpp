@@ -27,9 +27,10 @@ void UIInstallPresenterClass::Update_Sizes(void)
 	FirestormSize = Content_Size_Text(Content_Firestorm_Marginal());
 	FsMoviesSize = Content_Size_Text(Content_FsMovies_Marginal());
 	TotalSize = Content_Size_Text(Content_Download_Bytes(TsMovies, Firestorm, FsMovies));
-	Notice = "These files are Electronic Arts' freeware Tiberian Sun release. They are not covered by the siliconsun license.\nThey are downloaded from ";
-	Notice += Content_Download_Host();
-	Notice += ".";
+	Notice = "These files are Electronic Arts' freeware Tiberian Sun release. They are not covered by the siliconsun license.";
+	Source = "They are downloaded from ";
+	Source += Content_Download_Host();
+	Source += ".";
 }
 
 
@@ -101,6 +102,7 @@ class UIInstallViewClass : public UIRmlViewClass
 		virtual void Sync(void) override
 		{
 			Model.DirtyVariable("notice");
+			Model.DirtyVariable("source");
 			Model.DirtyVariable("basesize");
 			Model.DirtyVariable("tsmovies");
 			Model.DirtyVariable("tsmoviesize");
@@ -120,6 +122,7 @@ class UIInstallViewClass : public UIRmlViewClass
 		virtual bool Bind(Rml::DataModelConstructor & model) override
 		{
 			return(model.Bind("notice", &Data.Notice)
+				&& model.Bind("source", &Data.Source)
 				&& model.Bind("basesize", &Data.BaseSize)
 				&& model.Bind("tsmovies", &Data.TsMovies)
 				&& model.Bind("tsmoviesize", &Data.TsMoviesSize)
