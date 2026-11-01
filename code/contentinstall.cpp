@@ -421,7 +421,7 @@ void ContentTransfer::State::Step_Hash(void)
 	} else {
 		unsigned char digest[32];
 		sha.Final(digest);
-		bool matches = Content_Sha256_Matches(file->Sha256, digest);
+		bool matches = Content_File_Matches(*file, digest);
 		std::fclose(in);
 		in = nullptr;
 		if (matches) {
@@ -480,7 +480,7 @@ void ContentTransfer::State::Finish_File(void)
 	Close_IO();
 	unsigned char digest[32];
 	sha.Final(digest);
-	if (have != file->Size || !Content_Sha256_Matches(file->Sha256, digest)) {
+	if (have != file->Size || !Content_File_Matches(*file, digest)) {
 		if (have != file->Size && !copy) {
 			error = std::string("The download of ") + file->Name + " ended early. It will resume from where it left off.";
 		} else {

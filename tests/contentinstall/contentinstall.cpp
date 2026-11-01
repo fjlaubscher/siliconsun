@@ -51,6 +51,30 @@ int Name_Count(std::string const & text)
 	return(count);
 }
 
+
+bool Hex_Digest(std::string const & hex, unsigned char out[32])
+{
+	if (hex.size() != 64) {
+		return(false);
+	}
+	for (std::size_t index = 0; index < 32; index++) {
+		unsigned int byte = 0;
+		for (int digit = 0; digit < 2; digit++) {
+			char c = hex[index * 2 + digit];
+			byte <<= 4;
+			if (c >= '0' && c <= '9') {
+				byte |= (unsigned int)(c - '0');
+			} else if (c >= 'a' && c <= 'f') {
+				byte |= (unsigned int)(c - 'a' + 10);
+			} else {
+				return(false);
+			}
+		}
+		out[index] = (unsigned char)byte;
+	}
+	return(true);
+}
+
 }
 
 
@@ -71,7 +95,7 @@ TEST_CASE("sha256 matches the empty string and abc")
 TEST_CASE("the catalog pins the freeware files and tibsun is last")
 {
 	std::span<ContentFile const> files = Content_Files();
-	CHECK_MESSAGE(files.size() == 25, "the freeware set has 25 files");
+	CHECK_MESSAGE(files.size() == 22, "the freeware set has 22 files");
 	CHECK_MESSAGE(std::string(files.back().Name) == "TIBSUN.MIX", "TIBSUN.MIX is saved last, so a cancelled install can resume");
 	CHECK_MESSAGE(files.back().Size == 75094736, "TIBSUN.MIX is the freeware archive");
 	CHECK_MESSAGE(std::string(files.back().Sha256) == "23431290b211cd039315095e1987f1c411ecd3b6440861c4874572c92e5f6b2a", "TIBSUN.MIX keeps its pinned checksum");
@@ -83,6 +107,25 @@ TEST_CASE("the catalog pins the freeware files and tibsun is last")
 		CHECK_MESSAGE(manifest.find(file.Sha256) != std::string::npos, file.Name);
 		CHECK_MESSAGE(manifest.find(std::to_string(file.Size)) != std::string::npos, file.Name);
 	}
+}
+
+
+TEST_CASE("scores.mix accepts the steam and retail checksums")
+{
+	bool found = false;
+	for (ContentFile const & file : Content_Files()) {
+		if (std::string(file.Name) != "SCORES.MIX") {
+			continue;
+		}
+		found = true;
+		CHECK_MESSAGE(file.Sha256Alt != nullptr, "SCORES.MIX pins a second checksum");
+		unsigned char digest[32];
+		CHECK_MESSAGE(Hex_Digest(file.Sha256, digest), "the steam checksum parses");
+		CHECK_MESSAGE(Content_File_Matches(file, digest), "the steam checksum is accepted");
+		CHECK_MESSAGE(Hex_Digest(file.Sha256Alt, digest), "the retail checksum parses");
+		CHECK_MESSAGE(Content_File_Matches(file, digest), "the retail checksum is accepted");
+	}
+	CHECK_MESSAGE(found, "SCORES.MIX is in the freeware set");
 }
 
 

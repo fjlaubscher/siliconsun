@@ -29,6 +29,7 @@ struct ContentFile
 	std::uint64_t Size;
 	char const * Sha256;
 	ContentPart Part;
+	char const * Sha256Alt;  // second accepted checksum, when releases differ
 };
 
 
@@ -39,6 +40,8 @@ char const * Content_Download_Root(void);
 std::string Content_Download_Host(void);
 
 bool Content_File_Selected(ContentFile const & file, bool tsmovies, bool firestorm, bool fsmovies);
+
+bool Content_File_Matches(ContentFile const & file, unsigned char const digest[32]);
 
 std::uint64_t Content_Base_Bytes(void);
 

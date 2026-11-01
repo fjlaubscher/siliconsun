@@ -4,7 +4,7 @@ import manifest from "../manifest.json" with { type: "json" };
 import { resolveKey } from "./allow.ts";
 
 test("every manifest file is served under its own name", () => {
-  assert.equal(manifest.files.length, 25);
+  assert.equal(manifest.files.length, 22);
   for (const file of manifest.files) {
     assert.equal(resolveKey("/files/" + file.name), file.name);
     assert.equal(resolveKey("/files/" + file.name.toLowerCase()), file.name);
