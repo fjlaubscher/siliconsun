@@ -41,9 +41,15 @@ void UIInstallPresenterClass::Execute(UIIntent const & intent)
 		Update_Sizes();
 	} else if (intent.Name == "firestorm") {
 		Firestorm = intent.Value != 0;
+		if (!Firestorm) {
+			FsMovies = false;
+		}
 		Update_Sizes();
 	} else if (intent.Name == "fsmovies") {
 		FsMovies = intent.Value != 0;
+		if (FsMovies) {
+			Firestorm = true;
+		}
 		Update_Sizes();
 	} else if (intent.Name == "download" && !Busy) {
 		HasError = false;
@@ -75,6 +81,9 @@ void UIInstallPresenterClass::Execute(UIIntent const & intent)
 		Transfer.Cancel();
 		Busy = false;
 		Status.clear();
+	} else if (intent.Name == "restart" && Installed) {
+		Restart = true;
+		Result = UI_RESULT_ACCEPTED;
 	} else if (intent.Name == "quit") {
 		Transfer.Cancel();
 		Result = UI_RESULT_CANCELLED;
@@ -116,6 +125,7 @@ class UIInstallViewClass : public UIRmlViewClass
 			Model.DirtyVariable("percent");
 			Model.DirtyVariable("error");
 			Model.DirtyVariable("haserror");
+			Model.DirtyVariable("installed");
 		}
 
 	protected:
@@ -135,7 +145,8 @@ class UIInstallViewClass : public UIRmlViewClass
 				&& model.Bind("status", &Data.Status)
 				&& model.Bind("percent", &Data.Percent)
 				&& model.Bind("error", &Data.Error)
-				&& model.Bind("haserror", &Data.HasError));
+				&& model.Bind("haserror", &Data.HasError)
+				&& model.Bind("installed", &Data.Installed));
 		}
 
 	private:

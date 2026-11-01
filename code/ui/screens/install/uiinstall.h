@@ -20,8 +20,8 @@ class UIViewClass;
 
 enum UIInstallResult
 {
-	UI_INSTALL_READY,
 	UI_INSTALL_QUIT,
+	UI_INSTALL_RESTART,
 	UI_INSTALL_UNAVAILABLE,
 };
 
@@ -40,6 +40,8 @@ class UIInstallPresenterClass : public UIPresenterClass
 		bool FsMovies = false;
 		bool Busy = false;
 		bool HasError = false;
+		bool Installed = false;
+		bool Restart = false;
 		int Percent = 0;
 		std::string Notice;
 		std::string Source;

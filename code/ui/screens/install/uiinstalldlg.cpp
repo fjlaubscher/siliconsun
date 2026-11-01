@@ -30,7 +30,9 @@ UIInstallResult UI_Install_Dialog(void)
 			presenter.Percent = presenter.Transfer.Percent();
 			if (!presenter.Transfer.Active()) {
 				if (presenter.Transfer.Succeeded()) {
-					presenter.Result = UI_RESULT_ACCEPTED;
+					presenter.Busy = false;
+					presenter.Status.clear();
+					presenter.Installed = true;
 				} else {
 					presenter.Busy = false;
 					presenter.Error = presenter.Transfer.Error();
@@ -46,8 +48,8 @@ UIInstallResult UI_Install_Dialog(void)
 	// as missing and cache that. Drop the cache so the next screen is rebuilt from the mounted data.
 	UI_On_Archives_Change(SIDE_NONE);
 
-	if (result == UI_RESULT_ACCEPTED) {
-		return(UI_INSTALL_READY);
+	if (result == UI_RESULT_ACCEPTED && presenter.Restart) {
+		return(UI_INSTALL_RESTART);
 	}
 	if (result == UI_RESULT_CANCELLED) {
 		return(UI_INSTALL_QUIT);

@@ -10,7 +10,7 @@
 
 body
 {
-	background-color: #000000;
+	background-color: #1a1d24;
 }
 
 #panel
@@ -18,13 +18,21 @@ body
 	position: relative;
 	box-sizing: border-box;
 	width: 520dp;
-	height: 308dp;
+	height: 400dp;
 	top: 50%;
-	margin: -154dp auto 0 auto;
+	margin: -200dp auto 0 auto;
 	padding: 16dp 28dp 0 28dp;
 }
 
-#notice, #status, #error
+#logo
+{
+	width: 112dp;
+	height: 112dp;
+	margin: 0 auto 10dp auto;
+	decorator: image(icon.png);
+}
+
+#notice, #status, #error, #done-text
 {
 	line-height: 16dp;
 	white-space: pre-wrap;
@@ -90,6 +98,11 @@ body
 	text-align: right;
 }
 
+.option.sub
+{
+	padding-left: 16dp;
+}
+
 .option.total
 {
 	margin-top: 4dp;
@@ -109,13 +122,19 @@ body
 	margin-top: 6dp;
 }
 
+#bar fill
+{
+	background-color: #70ff00;
+	decorator: horizontal-gradient(#70ff0040 #70ff00);
+}
+
 #error
 {
 	height: 32dp;
 	margin-top: 4dp;
 }
 
-#actions, #cancel-row
+#actions, #cancel-row, #done-actions
 {
 	display: flex;
 	justify-content: space-between;
@@ -127,7 +146,7 @@ body
 	justify-content: center;
 }
 
-#actions button, #cancel-row button
+#actions button, #cancel-row button, #done-actions button
 {
 	width: 110dp;
 }

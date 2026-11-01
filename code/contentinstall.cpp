@@ -204,12 +204,12 @@ void ContentTransfer::State::Describe(void)
 	status = verb;
 	status += " ";
 	status += file->Name;
-	status += " — ";
+	status += ": ";
 	status += Content_Size_Text(have);
 	status += " of ";
 	status += Content_Size_Text(file->Size);
 	if (speed >= 0.0 && phase == Phase::Transfer) {
-		status += " — ";
+		status += ", ";
 		status += Content_Speed_Text(speed);
 	}
 }
