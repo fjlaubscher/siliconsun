@@ -53,6 +53,11 @@ SDL_Cursor * _SystemCursors[UI_CURSOR_COUNT];
 // when a window drag, a resize or the system menu ends.
 Uint32 _CaptureCancelled = 0;
 Uint32 _ModalLoopEnded = 0;
+#if defined(_WIN32)
+// The physical buttons down at the last mouse event, and the logical button each press took.
+int _PhysicalButtons = 0;
+int _HeldLogical[SDL_BUTTON_X2 + 1] = {};
+#endif
 #if !defined(_WIN32)
 bool _RepaintRequested = false;
 #endif
@@ -226,6 +231,59 @@ void Post_Event(Uint32 type)
 
 
 #if defined(_WIN32)
+// Windows applies the player's left-handed button setting to its mouse messages, and SDL passes
+// that button on. The physical state is read too, so a press keeps the same meaning even when SDL
+// reports the physical button.
+int Logical_Mouse_Button(int button, bool down)
+{
+	if (button != SDL_BUTTON_LEFT && button != SDL_BUTTON_RIGHT) {
+		return(button);
+	}
+
+	int const now = (GetAsyncKeyState(VK_LBUTTON) < 0 ? 1 : 0) | (GetAsyncKeyState(VK_RBUTTON) < 0 ? 2 : 0);
+	int const pressed = now & ~_PhysicalButtons;
+	_PhysicalButtons = now;
+
+	// A release takes the button its press took, so a click cannot end on a different button.
+	if (!down) {
+		int const logical = _HeldLogical[button];
+		_HeldLogical[button] = 0;
+		return(logical != 0 ? logical : button);
+	}
+
+	bool const swapped = GetSystemMetrics(SM_SWAPBUTTON) != 0;
+	int logical = button;
+	if (pressed == 1) {
+		logical = swapped ? SDL_BUTTON_RIGHT : SDL_BUTTON_LEFT;
+	} else if (pressed == 2) {
+		logical = swapped ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
+	}
+	_HeldLogical[button] = logical;
+	return(logical);
+}
+
+
+void Reset_Mouse_Buttons(void)
+{
+	_PhysicalButtons = 0;
+	for (int & logical : _HeldLogical) {
+		logical = 0;
+	}
+}
+#else
+int Logical_Mouse_Button(int button, bool)
+{
+	return(button);
+}
+
+
+void Reset_Mouse_Buttons(void)
+{
+}
+#endif
+
+
+#if defined(_WIN32)
 // Windows can end the capture while the window keeps the focus, for a system menu or another
 // window taking the mouse, and SDL reports neither. The window's own releases are ignored.
 LRESULT CALLBACK Watch_Messages(HWND window, UINT message, WPARAM wparam, LPARAM lparam, UINT_PTR, DWORD_PTR)
@@ -273,8 +331,13 @@ void Handle_SDL_Event(SDL_Event const & sdlevent)
 		continued = _Input.Track_Key(sdlevent.key);
 	}
 
+	SDL_Event translated = sdlevent;
+	if (translated.type == SDL_EVENT_MOUSE_BUTTON_DOWN || translated.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+		translated.button.button = (Uint8)Logical_Mouse_Button(translated.button.button, translated.button.down);
+	}
+
 	std::vector<WindowEvent> events;
-	Window_Events_From_SDL(sdlevent, Pixel_Density(), _Input.Modifiers(), events);
+	Window_Events_From_SDL(translated, Pixel_Density(), _Input.Modifiers(), events);
 	for (WindowEvent & event : events) {
 		if (event.Type == WINDOW_EVENT_KEY_DOWN && continued) {
 			event.Repeat = true;
@@ -485,6 +548,7 @@ bool Main_Window_Create(bool windowed, int width, int height, MainWindowIcon con
 	SetWindowSubclass(Window_Handle(), Watch_Messages, WindowSubclass, 0);
 #endif
 	_Input.Reset();
+	Reset_Mouse_Buttons();
 
 	if (!_Unattended) {
 		SDL_ShowWindow(_Window);
