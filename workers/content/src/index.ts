@@ -1,4 +1,4 @@
-import { resolveKey } from "./allow";
+import { resolveKey } from "./allow.ts";
 
 function responseHeaders(object: R2Object): { status: number; headers: Headers } {
   const headers = new Headers();
@@ -39,8 +39,13 @@ export default {
       });
     }
 
-    const key = resolveKey(new URL(request.url).pathname);
-    if (key === null) {
+    const key = request.headers.get("x-siliconsun-key");
+    if (key !== env.CONTENT_KEY) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
+    const name = resolveKey(new URL(request.url).pathname);
+    if (name === null) {
       return new Response("Not found", { status: 404 });
     }
 
@@ -53,10 +58,10 @@ export default {
     console.log(JSON.stringify({
       ua: request.headers.get("user-agent"),
       method: request.method,
-      key,
+      key: name,
     }));
 
-    const object = await env.GAME.get(key, { range: request.headers });
+    const object = await env.GAME.get(name, { range: request.headers });
     if (object === null) {
       return new Response("Not found", { status: 404 });
     }

@@ -160,3 +160,9 @@ TEST_CASE("the download host is the worker origin without its scheme")
 	CHECK_MESSAGE(root.find(host) != std::string::npos, "the host is taken from the download origin");
 	CHECK_MESSAGE(host.find("://") == std::string::npos, "the screen shows the host without a scheme");
 }
+
+
+TEST_CASE("the client carries the key the worker requires")
+{
+	CHECK_MESSAGE(Content_Download_Key()[0] != '\0', "the worker refuses requests without the key");
+}

@@ -71,6 +71,12 @@ char const * Content_Download_Root(void)
 }
 
 
+char const * Content_Download_Key(void)
+{
+	return("7f0236d1ca66d6cd177139dfce6f3dd68b14ed35a82b27204d82d5bb369ec9c2");
+}
+
+
 std::string Content_Download_Host(void)
 {
 	std::string host = Content_Download_Root();

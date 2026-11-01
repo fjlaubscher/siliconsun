@@ -22,7 +22,7 @@ class ContentHttpGet
 		ContentHttpGet(ContentHttpGet const &) = delete;
 		ContentHttpGet & operator = (ContentHttpGet const &) = delete;
 
-		bool Open(char const * url, char const * user_agent, std::uint64_t offset, std::string & error);
+		bool Open(char const * url, char const * user_agent, char const * key, std::uint64_t offset, std::string & error);
 		int Read(void * buffer, int capacity, std::string & error);
 		void Close(void);
 		std::uint64_t Total(void) const;

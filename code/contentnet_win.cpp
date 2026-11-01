@@ -109,7 +109,7 @@ ContentHttpGet::~ContentHttpGet(void)
 }
 
 
-bool ContentHttpGet::Open(char const * url, char const * user_agent, std::uint64_t offset, std::string & error)
+bool ContentHttpGet::Open(char const * url, char const * user_agent, char const * key, std::uint64_t offset, std::string & error)
 {
 	Close();
 	if (url == nullptr || url[0] == '\0') {
@@ -154,6 +154,11 @@ bool ContentHttpGet::Open(char const * url, char const * user_agent, std::uint64
 		error = "The download request could not be opened.";
 		Close();
 		return(false);
+	}
+
+	if (key != nullptr && key[0] != '\0') {
+		std::wstring key_header = L"X-Siliconsun-Key: " + Widen(key);
+		WinHttpAddRequestHeaders(Data->Request, key_header.c_str(), (DWORD)-1, WINHTTP_ADDREQ_FLAG_ADD | WINHTTP_ADDREQ_FLAG_REPLACE);
 	}
 
 	if (offset > 0) {

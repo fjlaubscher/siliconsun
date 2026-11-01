@@ -178,7 +178,7 @@ ContentHttpGet::~ContentHttpGet(void)
 }
 
 
-bool ContentHttpGet::Open(char const * url, char const * user_agent, std::uint64_t offset, std::string & error)
+bool ContentHttpGet::Open(char const * url, char const * user_agent, char const * key, std::uint64_t offset, std::string & error)
 {
 	Close();
 	if (url == nullptr || url[0] == '\0') {
@@ -197,6 +197,9 @@ bool ContentHttpGet::Open(char const * url, char const * user_agent, std::uint64
 		NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:address]];
 		NSString * agent = [NSString stringWithUTF8String:(user_agent != nullptr ? user_agent : "siliconsun")];
 		[request setValue:agent forHTTPHeaderField:@"User-Agent"];
+		if (key != nullptr && key[0] != '\0') {
+			[request setValue:[NSString stringWithUTF8String:key] forHTTPHeaderField:@"X-Siliconsun-Key"];
+		}
 		if (offset > 0) {
 			NSString * range = [NSString stringWithFormat:@"bytes=%llu-", (unsigned long long)offset];
 			[request setValue:range forHTTPHeaderField:@"Range"];

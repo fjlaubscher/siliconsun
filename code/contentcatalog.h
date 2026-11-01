@@ -37,6 +37,10 @@ std::span<ContentFile const> Content_Files(void);
 
 char const * Content_Download_Root(void);
 
+// The key the worker requires on every request. It ships in the open, so it turns away
+// drive-by downloads, not anyone reading this source.
+char const * Content_Download_Key(void);
+
 std::string Content_Download_Host(void);
 
 bool Content_File_Selected(ContentFile const & file, bool tsmovies, bool firestorm, bool fsmovies);

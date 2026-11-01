@@ -54,6 +54,7 @@ __pycache__/
 # Worker local state
 node_modules/
 .wrangler/
+.dev.vars
 workers/content/worker-configuration.d.ts
 
 # Manual tooling temp snapshots (interrupted manage.py runs)
