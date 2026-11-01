@@ -77,12 +77,14 @@
 #include "factory.h"
 #include "fly.h"
 #include "fog.h"
+#include "contentinstall.h"
 #include "gamedirs.h"
 #include "gamewindow.h"
 #include "globals.h"
 #include "goptions.h"
 #include "headless.h"
 #include "house.h"
+#include "ui/screens/install/uiinstall.h"
 #include "houstype.h"
 #include "hover.h"
 #include "infantry.h"
@@ -614,7 +616,10 @@ int main(int argc, char ** supplied_argv)
 	}
 #endif
 
-	if (parsed && Headless::Check_Request() && Apply_Game_Directories()) {
+	bool const directories = parsed && Headless::Check_Request()
+		&& (Headless::Is_Active() || Spawner_Is_Requested() || Create_Unnamed_Data_Directory())
+		&& Apply_Game_Directories();
+	if (directories) {
 
 		if (!Debug_MultipleInstances && !Headless::Is_Active() && !Claim_Single_Instance()) {
 			return(EXIT_SUCCESS);
@@ -793,7 +798,13 @@ int main(int argc, char ** supplied_argv)
 
 		DebugString("Main_Game\n");
 
-		Main_Game(argc, argv);
+		bool play = true;
+		if (!Headless::Is_Active() && !Spawner_Is_Requested() && !Content_Data_Present()) {
+			play = UI_Install_Dialog() != UI_INSTALL_QUIT;
+		}
+		if (play) {
+			Main_Game(argc, argv);
+		}
 
 		HiddenSurface->Fill(0);
 		Update_Visible_Surface(HiddenSurface);

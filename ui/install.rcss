@@ -1,0 +1,103 @@
+/*******************************************************************************
+ *                                O P E N  T S
+ *******************************************************************************
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2026 OpenTS contributors
+ *
+ * See LICENSE.md for applicable additional terms and warranty disclaimers.
+ ******************************************************************************/
+
+
+#reveal
+{
+	width: 520dp;
+	height: 286dp;
+	top: 50%;
+	margin-top: -143dp;
+}
+
+#content
+{
+	padding: 16dp 28dp 0 28dp;
+}
+
+#notice, #status, #error
+{
+	line-height: 16dp;
+	white-space: pre-wrap;
+}
+
+#notice
+{
+	height: 52dp;
+}
+
+#choices
+{
+	margin-top: 6dp;
+}
+
+.option
+{
+	display: flex;
+	align-items: center;
+	height: 22dp;
+}
+
+label.check.option
+{
+	display: flex;
+}
+
+.option .name
+{
+	flex: 1;
+	margin-left: 4dp;
+}
+
+.option .size
+{
+	width: 84dp;
+	text-align: right;
+}
+
+.option.total
+{
+	margin-top: 4dp;
+}
+
+#status
+{
+	height: 36dp;
+	margin-top: 8dp;
+}
+
+#bar
+{
+	width: 100%;
+	height: 22dp;
+	margin-top: 6dp;
+}
+
+#error
+{
+	height: 32dp;
+	margin-top: 4dp;
+}
+
+#actions, #cancel-row
+{
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10dp;
+}
+
+#cancel-row
+{
+	justify-content: center;
+}
+
+#actions button, #cancel-row button
+{
+	width: 110dp;
+}
