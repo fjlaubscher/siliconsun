@@ -8,16 +8,19 @@
  ******************************************************************************/
 
 
-#reveal
+body
 {
+	background-color: #000000;
+}
+
+#panel
+{
+	position: relative;
+	box-sizing: border-box;
 	width: 520dp;
 	height: 308dp;
 	top: 50%;
-	margin-top: -154dp;
-}
-
-#content
-{
+	margin: -154dp auto 0 auto;
 	padding: 16dp 28dp 0 28dp;
 }
 
@@ -46,9 +49,11 @@
 	font-size: 12dp;
 }
 
-label.check.option
+.option .mark
 {
-	display: flex;
+	flex: none;
+	width: 16dp;
+	text-align: center;
 }
 
 .option .name
