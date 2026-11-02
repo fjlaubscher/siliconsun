@@ -93,7 +93,7 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
         run: |
-          version=$(sed -n 's/^project(OpenTS VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
+          version=$(sed -n 's/^set(SILICONSUN_VERSION "\([0-9.]*\)".*/\1/p' CMakeLists.txt)
           test -n "$version"
           bash .github/scripts/package-macos-release.sh \
             build/macos/bin/Game \

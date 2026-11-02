@@ -39,7 +39,9 @@ void UI_Version_Lines(std::vector<std::string> & lines)
 	}
 	lines.push_back(title);
 
-	std::snprintf(buffer, sizeof(buffer), "Version %s", Version_Name());
+	lines.push_back(Version_Name());
+
+	std::snprintf(buffer, sizeof(buffer), "OpenTS %s", OPENTS_VERSION);
 	lines.push_back(buffer);
 
 	std::snprintf(buffer, sizeof(buffer), "Internal Version %s", VerNum.Version_Name());

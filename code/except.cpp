@@ -1207,6 +1207,7 @@ static void Build_Exception_Report(EXCEPTION_POINTERS * e_info, DWORD crashed_th
 				CrashTime.wYear, CrashTime.wMonth, CrashTime.wDay,
 				CrashTime.wHour, CrashTime.wMinute, CrashTime.wSecond);
 	Exception_Printf("Version     : %s\r\n", Version_Name());
+	Exception_Printf("OpenTS      : %s\r\n", OPENTS_VERSION);
 
 	SYSTEMTIME link_time;
 	if (Get_Link_Time(&link_time)) {
@@ -2046,9 +2047,6 @@ void Install_Exception_Handler(void)
 	}
 
 	Initialize_Symbols();
-
-	// Primed because the first call allocates, and the report cannot afford to.
-	Version_Name();
 
 	// Both events exist before the thread does, so that a published thread id also means its
 	// handoff is ready to use.

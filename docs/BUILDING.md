@@ -246,13 +246,18 @@ SemVer prerelease label goes in `OPENTS_VERSION_PRERELEASE`. Both values must
 match the development entry in the manual's release registry;
 `python manual/tools/manage.py check` verifies this.
 
-Each build writes two generated headers from that version and the repository
-state:
+`SILICONSUN_VERSION` in the top-level `CMakeLists.txt` is the product version
+the player sees. It is separate from `project(OpenTS VERSION ...)`, which
+remains the save and network stamp.
+
+Each build writes three generated headers from those versions and the
+repository state:
 
 | Header | Contents |
 | --- | --- |
-| `opents_version.h` | The version components, the version string, a prerelease flag, and the packed version number |
-| `opents_build.h` | The commit, branch, commit date, whether tracked files were modified, and the version as it is displayed |
+| `opents_version.h` | The OpenTS version components, the version string, a prerelease flag, and the packed version number |
+| `opents_build.h` | The commit, branch, commit date, whether tracked files were modified, and the OpenTS version as it is displayed |
+| `siliconsun_version.h` | The siliconsun product version and whether this build is an official release |
 
 The packed version stores the major, minor, and patch components in one byte
 each. Saves and network peers reject a different number. Builds within one
@@ -261,26 +266,38 @@ network sessions may still be incompatible. The stamp does not record the
 target platform; see
 [Save and network compatibility between the platforms](#save-and-network-compatibility-between-the-platforms).
 
-The version resources in `Game.exe` and `Language.dll`, the title screen,
-version dialog, crash report, and debug log banner all read these headers. A
-normal build shows the version and commit, such as `0.1.0 (ab12cd3)`, plus a
-marker when tracked files are modified. The commit identifies the build for
-diagnostics; it is not a save or network compatibility stamp. An official
-build configured with `-DOPENTS_OFFICIAL_BUILD=ON` shows only its declared
-version.
+The title screen prints the siliconsun version at the bottom right, above the
+copyright line. A normal build appends the commit and the architecture, such
+as `siliconsun 1.3.1 (ab12cd3, x64)`. When tracked files differ from that
+commit, the line includes `, modified`. An official build configured with
+`-DOPENTS_OFFICIAL_BUILD=ON` prints the declared version alone, such as
+`siliconsun 1.3.1`. A build without Git metadata does the same.
 
-`opents_version.h` changes only with the version, so an ordinary commit does not
-rebuild code that reads only that header. `opents_build.h` is checked on every
-build, so a new commit appears without reconfiguring; an unchanged header is
-not rewritten.
+The version dialog and the crash report add `OpenTS` and `OPENTS_VERSION`.
+The debug log banner adds the OpenTS version, the architecture, and the build
+type. The dialog's internal version line prints `OPENTS_VERSION`. An
+out-of-sync report prints the siliconsun line, then `OpenTS` and
+`OPENTS_VERSION`, then that internal version. The commit identifies a build
+for diagnostics; it is not a save or network compatibility stamp.
+
+The version resources in `Game.exe` and `Language.dll` record
+`SILICONSUN_VERSION`. The macOS release bundle records it as
+`CFBundleShortVersionString` and `CFBundleVersion`.
+
+`opents_version.h` changes only with the OpenTS version, and
+`siliconsun_version.h` changes only with `SILICONSUN_VERSION` or the
+official-build option. An ordinary commit does not rebuild code that reads
+only those headers. `opents_build.h` is checked on every build, so a new
+commit appears in the siliconsun line without reconfiguring. An unchanged
+header is not rewritten.
 
 A tag or pull-request build uses a detached checkout with no branch. Its stamp
 uses a ref that points to the commit, preferring a tag, so a pull-request CI
 build names the pull request instead of `HEAD`.
 
 Git is optional at build time once the complete source tree is present. Without
-Git or repository metadata, the build records the commit as `unknown` and shows
-the version without one.
+Git or repository metadata, the build records the commit as `unknown` and the
+siliconsun line omits it.
 
 ## Continuous integration
 

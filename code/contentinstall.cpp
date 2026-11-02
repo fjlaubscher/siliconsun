@@ -15,7 +15,7 @@
 #include "contentnet.h"
 #include "contentsha256.h"
 #include "gamedirs.h"
-#include "version.h"
+#include "siliconsun_version.h"
 
 #include <chrono>
 #include <cstdint>
@@ -293,7 +293,7 @@ bool ContentTransfer::State::Connect(void)
 	}
 
 	std::string url = std::string(Content_Download_Root()) + "/files/" + file->Name;
-	std::string agent = std::string("siliconsun/") + Version_Name();
+	std::string agent = std::string("siliconsun/") + SILICONSUN_VERSION;
 	std::string failure;
 	if (!http.Open(url.c_str(), agent.c_str(), Content_Download_Key(), have, failure)) {
 		error = failure.empty() ? "The download connection failed." : failure;

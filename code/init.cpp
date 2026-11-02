@@ -2922,7 +2922,7 @@ void Draw_Version_Text(Surface * surface)
 	rect = surface->Get_Rect();
 
 	Fancy_Text_Print(
-		"V%s",
+		"%s",
 		*surface,
 		rect,
 		Point2D(rect.X + rect.Width - 2, rect.Y + rect.Height - 20),

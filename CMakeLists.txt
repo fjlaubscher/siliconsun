@@ -32,6 +32,9 @@ else()
     message(STATUS "Discord presence application ID is ${SILICONSUN_DISCORD_APPLICATION_ID}.")
 endif()
 
+# The version the player sees. The OpenTS project version stays the save and network stamp.
+set(SILICONSUN_VERSION "1.3.1")
+
 # Lets a target's FOLDER place it in a Visual Studio solution folder. The bgfx submodule sets
 # this as well, so declare it here rather than inherit it from a vendored build.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -84,13 +87,14 @@ set(OPENTS_GAME_DIR "${CMAKE_SOURCE_DIR}/Run" CACHE PATH "Tiberian Sun game data
 # ---------------------------------------------------------
 #
 # The version resources, the version displays, and the debug log's opening banner all report
-# the version and commit that produced the binary. Stamping runs once here so the headers exist
-# before the first compile, and again per build through OpenTSBuildStamp so that committing does
-# not require a reconfigure to be reflected. The UI shell's string-name table is generated from
-# language.h on the same schedule.
+# the product version, the OpenTS version, and the commit that produced the binary. Stamping
+# runs once here so the headers exist before the first compile, and again per build through
+# OpenTSBuildStamp so that committing does not require a reconfigure to be reflected. The UI
+# shell's string-name table is generated from language.h on the same schedule.
 set(OPENTS_GENERATED_DIR "${CMAKE_BINARY_DIR}/generated")
 set(OPENTS_VERSION_HEADER "${OPENTS_GENERATED_DIR}/opents_version.h")
 set(OPENTS_STAMP_HEADER "${OPENTS_GENERATED_DIR}/opents_build.h")
+set(SILICONSUN_VERSION_HEADER "${OPENTS_GENERATED_DIR}/siliconsun_version.h")
 set(OPENTS_STRINGS_HEADER "${OPENTS_GENERATED_DIR}/opents_strings.h")
 file(MAKE_DIRECTORY "${OPENTS_GENERATED_DIR}")
 
@@ -107,6 +111,13 @@ set(OPENTS_STAMP_ARGS
     -P "${CMAKE_SOURCE_DIR}/cmake/GitStamp.cmake"
 )
 
+set(SILICONSUN_STAMP_ARGS
+    "-DSILICONSUN_VERSION=${SILICONSUN_VERSION}"
+    "-DSILICONSUN_OFFICIAL_BUILD=${OPENTS_OFFICIAL_BUILD}"
+    "-DSILICONSUN_VERSION_HEADER=${SILICONSUN_VERSION_HEADER}"
+    -P "${CMAKE_SOURCE_DIR}/cmake/SiliconSunVersion.cmake"
+)
+
 set(OPENTS_STRINGS_ARGS
     "-DOPENTS_LANGUAGE_HEADER=${CMAKE_SOURCE_DIR}/code/language/language.h"
     "-DOPENTS_STRINGS_HEADER=${OPENTS_STRINGS_HEADER}"
@@ -114,10 +125,12 @@ set(OPENTS_STRINGS_ARGS
 )
 
 execute_process(COMMAND ${CMAKE_COMMAND} ${OPENTS_STAMP_ARGS})
+execute_process(COMMAND ${CMAKE_COMMAND} ${SILICONSUN_STAMP_ARGS})
 execute_process(COMMAND ${CMAKE_COMMAND} ${OPENTS_STRINGS_ARGS})
 
 add_custom_target(OpenTSBuildStamp ALL
     COMMAND ${CMAKE_COMMAND} ${OPENTS_STAMP_ARGS}
+    COMMAND ${CMAKE_COMMAND} ${SILICONSUN_STAMP_ARGS}
     COMMAND ${CMAKE_COMMAND} ${OPENTS_STRINGS_ARGS}
     COMMENT "Stamping the build identity and the string-name table"
     VERBATIM

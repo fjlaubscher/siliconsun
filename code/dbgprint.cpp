@@ -16,6 +16,7 @@
 #include "dbgprint.h"
 
 #include "opents_build.h"
+#include "version.h"
 #include "win.h"
 
 #if defined(_WIN32)
@@ -396,7 +397,10 @@ R"ART(
 
 	char line[512];
 
-	snprintf(line, sizeof(line), "Version  : OpenTS %s (%s %s build)\n", OPENTS_VERSION, OPENTS_ARCH, BuildType);
+	snprintf(line, sizeof(line), "Version  : %s\n", Version_Name());
+	Write_Message_Locked(line, false);
+
+	snprintf(line, sizeof(line), "OpenTS   : %s (%s %s build)\n", OPENTS_VERSION, OPENTS_ARCH, BuildType);
 	Write_Message_Locked(line, false);
 
 	snprintf(line, sizeof(line), "Commit   : %s on %s%s\n", OPENTS_COMMIT, OPENTS_BRANCH,

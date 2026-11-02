@@ -220,6 +220,7 @@ void Print_CRCs(EventClass const * events, int count, unsigned const * crc_ring,
 	fprintf(fp, "TS Sync\n");
 
 	fprintf(fp, "\nVersion %s\n", Version_Name());
+	fprintf(fp, "OpenTS %s\n", OPENTS_VERSION);
 	fprintf(fp, "Internal Version %s\n", VerNum.Version_Name());
 
 	fprintf(fp, "Release Build: %s - %s\r\n", OPENTS_BUILD_DESCRIPTION, OPENTS_COMMIT_DATE);

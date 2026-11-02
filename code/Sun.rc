@@ -25,9 +25,10 @@
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
-// The version resource reports the project version and the commit it was built from.
+// FileVersion and ProductVersion are the siliconsun release. PrivateBuild keeps the commit.
 #include	"opents_version.h"
 #include	"opents_build.h"
+#include	"siliconsun_version.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // English (U.S.) resources
@@ -71,8 +72,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION OPENTS_RC_FILEVERSION
- PRODUCTVERSION OPENTS_RC_FILEVERSION
+ FILEVERSION SILICONSUN_RC_FILEVERSION
+ PRODUCTVERSION SILICONSUN_RC_FILEVERSION
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG | OPENTS_RC_PRERELEASE_FLAG
@@ -90,14 +91,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "OpenTS contributors\0"
             VALUE "FileDescription", "OpenTS engine for Command & Conquer: Tiberian Sun\0"
-            VALUE "FileVersion", OPENTS_VERSION "\0"
+            VALUE "FileVersion", SILICONSUN_VERSION "\0"
             VALUE "InternalName", "Sun\0"
             VALUE "LegalCopyright", "Copyright © 2000 Westwood Studios, © 2026 OpenTS contributors\0"
             VALUE "LegalTrademarks", "Command & Conquer is a trademark of Westwood Studios\0"
             VALUE "OriginalFilename", "Game.exe\0"
             VALUE "PrivateBuild", OPENTS_BUILD_DESCRIPTION "\0"
             VALUE "ProductName", "Command & Conquer : Tiberian Sun\0"
-            VALUE "ProductVersion", OPENTS_VERSION_DISPLAY "\0"
+            VALUE "ProductVersion", SILICONSUN_PRODUCT_VERSION "\0"
             VALUE "SpecialBuild", "\0"
         END
     END
