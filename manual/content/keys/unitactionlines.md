@@ -4,7 +4,7 @@ summary: Draws lines from each selected object to its target, along its route an
 see_also: ["system:action-lines", AlwaysShowActionLines, ToolTips, SidebarCameoText]
 when_omitted:
   kind: value
-  value: "yes"
+  value: "no"
 ---
 
 `UnitActionLines=yes` lets selected vehicles, infantry and aircraft draw action lines: a line to the object's target, a line along its route, and lines through its queued destinations. Only objects that belong to a house under the player's control draw them. Structures never do. `UnitActionLines=no` turns the lines off for every object, but does not affect the sighting laser.
