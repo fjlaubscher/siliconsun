@@ -1711,6 +1711,12 @@ char const * Pick_Load_Background_Name(Point2D & pos)
 		pos = Point2D(570, 155);
 	}
 
+	// These points were measured on the 640 by 400 picture, and move with it when a
+	// larger surface centers that picture.
+	int x_adjust = (VisibleRect.Width - 640) / 2;
+	int y_adjust = (VisibleRect.Height - 400) / 2;
+	pos += Point2D(x_adjust, y_adjust);
+
 	if (player == 1) {
 		pos += Point2D(-4, 10);
 	} else {
