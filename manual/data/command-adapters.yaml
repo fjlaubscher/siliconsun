@@ -369,6 +369,8 @@ fixed_exclusions:
       - { file: code/keyboard.cpp, function: WWKeyboardClass::Is_Mouse_Key, expression: VK_MBUTTON }
       - { file: code/keyboard.cpp, function: WWKeyboardClass::Is_Mouse_Key, expression: VK_RBUTTON }
     reason: Keyboard-backend classification of mouse virtual keys.
+  - site: { file: code/sdl/sdlwindow.cpp, function: Logical_Mouse_Button, expression: VK_LBUTTON+VK_RBUTTON, guard: "defined(_WIN32)" }
+    reason: Reads the physical left and right mouse-button state to translate SDL buttons under a swapped setting; it is not a control.
   - sites:
       - { file: code/sdl/sdlwindow.cpp, function: Main_Window_Key_Down, expression: VK_LBUTTON }
       - { file: code/sdl/sdlwindow.cpp, function: Main_Window_Key_Down, expression: VK_RBUTTON }

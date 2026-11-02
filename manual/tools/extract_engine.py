@@ -265,7 +265,7 @@ def computed_key_records(path, cls, raw, body, offset):
 # Small C++ helpers
 # ---------------------------------------------------------------------------
 
-_COMMENT_OR_STRING = re.compile(r'"(?:[^"\\]|\\.)*"?|//[^\n]*|/\*.*?(?:\*/|\Z)', re.S)
+_COMMENT_OR_STRING = re.compile(r'"(?:[^"\\]|\\.)*"?|//[^\n]*|/\*.*?(?:\*/|\Z)|#[^\n]*', re.S)
 _NOT_NEWLINE = re.compile(r"[^\n]")
 
 
@@ -277,7 +277,7 @@ def _blank_comment(match):
 # Every scanner strips the same source files, so one process strips each once.
 @functools.lru_cache(maxsize=None)
 def strip_comments(text):
-    """Remove // and /* */ comments without disturbing line numbering."""
+    """Remove // and /* */ comments and preprocessor directives without disturbing line numbering."""
     return _COMMENT_OR_STRING.sub(_blank_comment, text)
 
 
