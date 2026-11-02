@@ -10,6 +10,7 @@ opents_add_test(TutorialText
         ini.cpp
         utf8.cpp
         dbgprint.cpp
+        versiondisplay.cpp
         b64pipe.cpp
         b64straw.cpp
         base64.cpp

@@ -14,6 +14,7 @@ opents_add_test(GameDirs
         file_posix.cpp
         file_win.cpp
         dbgprint.cpp
+        versiondisplay.cpp
         ini.cpp
         utf8.cpp
         b64pipe.cpp

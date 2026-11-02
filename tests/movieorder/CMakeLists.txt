@@ -14,6 +14,7 @@ opents_add_test(MovieOrder
         file_posix.cpp
         file_win.cpp
         dbgprint.cpp
+        versiondisplay.cpp
         utf8.cpp
         buff.cpp
         crc.cpp
