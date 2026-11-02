@@ -17,7 +17,6 @@
 #include "_tooltip.h"
 #include "_ui.h"
 #include "_xmouse.h"
-#include "cctooltip.h"
 #include "dbgprint.h"
 #include "globals.h"
 #include "goptions.h"
@@ -31,6 +30,7 @@
 #include "session.h"
 #include "ui/rml/rmltexture.h"
 #include "ui/uishell.h"
+#include "uitooltip.h"
 #include "video.h"
 #include "vidscale.h"
 #include "windowevent.hh"
@@ -275,7 +275,7 @@ bool Game_Window_Open(int width, int height)
 
 	MainWindow = (HWND)Main_Window_Native().Handle;
 
-	ToolTips = new CCToolTip();
+	ToolTips = new UIToolTip();
 	ToolTips->Set_Timer_Delay(500);
 
 	Main_Window_Set_Cursor(Main_Window_System_Cursor(UI_CURSOR_ARROW));

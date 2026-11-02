@@ -1,5 +1,6 @@
-# Mounts toy MIX archives and checks which copy a shared name resolves to. The harness
-# builds the mix and file classes itself, and every archive it opens is one it writes.
+# The mixfile search is compiled straight into the harness, along with the file classes it
+# reads through. It lives outside code/ so that the recursive glob building OpenTS cannot pick
+# this target's entry point up.
 
 opents_add_test(MixOrder
     NAME mixorder
@@ -18,19 +19,19 @@ opents_add_test(MixOrder
         buff.cpp
         crc.cpp
         cstraw.cpp
-        straw.cpp
-        xstraw.cpp
+        int.cpp
+        mpmath.cpp
         pipe.cpp
-        xpipe.cpp
         pk.cpp
         pkstraw.cpp
         blwstraw.cpp
         blowfish.cpp
-        int.cpp
-        mpmath.cpp
         rndstraw.cpp
-        sha.cpp
         shastraw.cpp
+        sha.cpp
+        straw.cpp
+        xpipe.cpp
+        xstraw.cpp
         trim.cpp
     INCLUDES ${OPENTS_GENERATED_DIR}
     DEFINITIONS WIN32 _WINDOWS _MBCS NOMINMAX
