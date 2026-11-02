@@ -35,7 +35,9 @@ static bool Fail(char const * message)
 static bool Round_Trip(char const * argument)
 {
 	int count = 0;
-	wchar_t ** wide = CommandLineToArgvW(GetCommandLineW(), &count);
+	wchar_t const * command = GetCommandLineW();
+	if (std::wcschr(command, (wchar_t)0x00E9) == nullptr) return(Fail("GetCommandLineW did not carry U+00E9"));
+	wchar_t ** wide = CommandLineToArgvW(command, &count);
 	if (wide == nullptr) return(Fail("CommandLineToArgvW returned nothing"));
 
 	bool matched = false;
