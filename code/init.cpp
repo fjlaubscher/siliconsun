@@ -3986,6 +3986,21 @@ class OptionsCommandClass : public CommandClass
 };
 
 
+/// <summary>
+/// Moves the view 34 pixels in one direction when ScrollWhileHeld is off.
+/// While that setting is on, the held key moves the view and this step does not.
+/// </summary>
+static void Scroll_One_Step(FacingType facing)
+{
+	if (Options.ScrollWhileHeld) {
+		return;
+	}
+
+	int distance = 34;
+	Map.Scroll_Map(facing, distance, true);
+}
+
+
 class ScrollNCommandClass : public CommandClass
 {
 	public:
@@ -4003,8 +4018,7 @@ class ScrollNCommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_N, distance, true);
+			Scroll_One_Step(FACING_N);
 		}
 };
 
@@ -4026,8 +4040,7 @@ class ScrollSCommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_S, distance, true);
+			Scroll_One_Step(FACING_S);
 		}
 };
 
@@ -4049,8 +4062,7 @@ class ScrollECommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_E, distance, true);
+			Scroll_One_Step(FACING_E);
 		}
 };
 
@@ -4072,8 +4084,7 @@ class ScrollWCommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_W, distance, true);
+			Scroll_One_Step(FACING_W);
 		}
 };
 
@@ -4095,8 +4106,7 @@ class ScrollNECommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_NE, distance, true);
+			Scroll_One_Step(FACING_NE);
 		}
 };
 
@@ -4118,8 +4128,7 @@ class ScrollSECommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_SE, distance, true);
+			Scroll_One_Step(FACING_SE);
 		}
 };
 
@@ -4141,8 +4150,7 @@ class ScrollSWCommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_SW, distance, true);
+			Scroll_One_Step(FACING_SW);
 		}
 };
 
@@ -4164,8 +4172,7 @@ class ScrollNWCommandClass : public CommandClass
 		}
 
 		virtual void Execute(void) const {
-			int distance = 34;
-			Map.Scroll_Map(FACING_NW, distance, true);
+			Scroll_One_Step(FACING_NW);
 		}
 };
 

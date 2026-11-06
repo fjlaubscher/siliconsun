@@ -1,13 +1,13 @@
 ---
 key: ScrollRate
 summary: How fast the tactical map is allowed to scroll, from 0 to 7, where a lower figure scrolls faster.
-see_also: [ScrollMethod, AutoScroll, ScrollMultiplier]
+see_also: [ScrollMethod, AutoScroll, ScrollMultiplier, ScrollWhileHeld]
 when_omitted:
   kind: value
   value: "3"
 ---
 
-`ScrollRate` limits the speed of both kinds of scrolling: edge scrolling and coast scrolling with the right mouse button. A lower value scrolls faster.
+`ScrollRate` limits the speed of edge scrolling and of coast scrolling with the right mouse button. While [`ScrollWhileHeld`](/keys/scrollwhileheld/) is on, it limits keyboard scrolling the same way as edge scrolling. A lower value scrolls faster.
 
 Unless [`AutoScroll`](/keys/autoscroll/) is off, resting the pointer against the edge of the screen scrolls the map, slowly at first and faster the longer the pointer stays there. The speed climbs through nine fixed steps, and `ScrollRate` sets the fastest step it may reach:
 
@@ -17,6 +17,8 @@ Unless [`AutoScroll`](/keys/autoscroll/) is off, resting the pointer against the
 
 Each step is a distance per sixtieth of a second, so the speed does not depend on the frame rate while the game draws at least 15 frames a second. [`ScrollMultiplier`](/keys/scrollmultiplier/) scales the step reached.
 
+Holding a scroll key while [`ScrollWhileHeld`](/keys/scrollwhileheld/) is on climbs through those same steps, up to the same fastest step. With that setting off, the key moves the fixed step [`ScrollWhileHeld`](/keys/scrollwhileheld/) describes, and `ScrollRate` does not change it.
+
 A right-button press on the map switches to coast scrolling. If the button went down off the map and is still held while edge scrolling, the speed drops by one step and cannot exceed the middle step of the nine.
 
 For coast scrolling, `ScrollRate` plus one divides the distance the map moves for a given drag, as described on [`ScrollMethod`](/keys/scrollmethod/). `0` gives the full distance and `3` a quarter of it.
@@ -24,5 +26,5 @@ For coast scrolling, `ScrollRate` plus one divides the distance the map moves fo
 The game controls dialog offers seven positions and saves the choice to `sun.ini` when accepted. The slider's fastest position, at its right end, stores `0`, and its slowest stores `6`.
 
 :::caution[Keep the value between 0 and 7]
-The value is not range-checked. A value of `8` or more, or `-2` or less, makes edge scrolling read past the end of its table of steps, so the map scrolls by an unpredictable distance. `-1` lets edge scrolling reach the fastest step, but makes coast scrolling divide by zero, with the same unpredictable result.
+The value is not range-checked. A value of `8` or more, or `-2` or less, makes edge scrolling read past the end of its table of steps. A held scroll key does the same while [`ScrollWhileHeld`](/keys/scrollwhileheld/) is on. The map then scrolls by an unpredictable distance. `-1` lets edge scrolling reach the fastest step, and a held scroll key does too while that setting is on, but makes coast scrolling divide by zero, with the same unpredictable result.
 :::

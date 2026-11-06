@@ -37,6 +37,7 @@
 
 #include "scroll.h"
 
+#include "_command.h"
 #include "_keyboar.h"
 #include "_map.h"
 #include "_rect.h"
@@ -46,21 +47,26 @@
 #include "_tactica.h"
 #include "building.h"
 #include "cell.h"
+#include "command.h"
 #include "dbgprint.h"
 #include "gametime.h"
+#include "globals.h"
 #include "goptions.h"
 #include "house.h"
 #include "incdec.h"
+#include "index.h"
 #include "init.h"
 #include "inline.h"
 #include "misc.h"
 #include "overtype.h"
 #include "rules.h"
 #include "savestream.h"
+#include "session.h"
 #include "sdl/sdlwindow.h"
 #include "suprtype.h"
 #include "surface.h"
 #include "tactical.h"
+#include "ui/uishell.h"
 #include "vidscale.h"
 #include "waypoint.h"
 #include "windowevent.hh"
@@ -68,6 +74,7 @@
 #include "special.hh"
 
 #include <algorithm>
+#include <cstring>
 
 
 // for some reason in wave..
@@ -79,6 +86,19 @@ CDTimerClass<SystemTimerClass> ScrollClass::Counter;
 
 // Steps from the scroll tables are paced off the clock at this rate, not off the frames drawn.
 #define	SCROLL_STEPS_PER_SECOND	60
+
+// Pixels per sixtieth of a second, slowest last.
+static int const ScrollSteps[] = {
+	0x00E0 * 2,
+	0x00C0 * 2,
+	0x00A0 * 2,
+	0x0080 * 2,
+	0x0060 * 2,
+	0x0040 * 2,
+	0x0020 * 2,
+	0x0010 * 2,
+	0x0008 * 2
+};
 
 // Caps what a poll may cover, so a wait on a dialog or a load does not return as one long jump.
 #define	MAX_SCROLL_STEPS_PER_POLL	4.0
@@ -384,6 +404,125 @@ ActionType ScrollClass::What_Action(Cell const & cell, ObjectClass * object, boo
 }
 
 
+static bool Scroll_Chord_Down(int key)
+{
+	if (!Keyboard->Down(key & 0xFF)) {
+		return(false);
+	}
+
+	bool const shift = (key & KN_SHIFT_BIT) != 0;
+	bool const ctrl = (key & KN_CTRL_BIT) != 0;
+	bool const alt = (key & KN_ALT_BIT) != 0;
+	return(shift == (Keyboard->Down(VK_SHIFT) != 0)
+		&& ctrl == (Keyboard->Down(VK_CONTROL) != 0)
+		&& alt == (Keyboard->Down(VK_MENU) != 0));
+}
+
+
+static FacingType Scroll_Facing(int x, int y)
+{
+	static FacingType const facing[3][3] = {
+		{ FACING_NW, FACING_N, FACING_NE },
+		{ FACING_W, FACING_NONE, FACING_E },
+		{ FACING_SW, FACING_S, FACING_SE },
+	};
+	return(facing[y + 1][x + 1]);
+}
+
+
+/// <summary>
+/// Pans the view while a scroll key is held and ScrollWhileHeld is on.
+/// The speed builds and eases off as it does when the pointer rests on a screen edge. A typed
+/// message, a shown screen, and the map editor count as no key held.
+/// </summary>
+static void Scroll_Keyboard(void)
+{
+	if (!Options.ScrollWhileHeld) {
+		return;
+	}
+
+	static int inertia = 0;
+	static CDTimerClass<SystemTimerClass> counter;
+	static double remainder = 0.0;
+	static FacingType facing = FACING_N;
+
+	int x = 0;
+	int y = 0;
+	bool bound = false;
+	if (!Debug_Map && !UIShell.Screen_Shown() && Session.Messages.Is_Edit() == 0) {
+		static struct {
+			char const * Name;
+			int X;
+			int Y;
+		} const commands[] = {
+			{ "ScrollNorth", 0, -1 },
+			{ "ScrollNorthEast", 1, -1 },
+			{ "ScrollEast", 1, 0 },
+			{ "ScrollSouthEast", 1, 1 },
+			{ "ScrollSouth", 0, 1 },
+			{ "ScrollSouthWest", -1, 1 },
+			{ "ScrollWest", -1, 0 },
+			{ "ScrollNorthWest", -1, -1 },
+		};
+
+		for (int index = 0; index < HotkeyCommands.Count(); index++) {
+			int const key = HotkeyCommands.Fetch_ID_By_Position(index);
+			if (!Scroll_Chord_Down(key)) {
+				continue;
+			}
+
+			char const * name = HotkeyCommands.Fetch_By_Position(index)->Get_Unique_Name();
+			for (auto const & command : commands) {
+				if (std::strcmp(name, command.Name) != 0) {
+					continue;
+				}
+				x = std::clamp(x + command.X, -1, 1);
+				y = std::clamp(y + command.Y, -1, 1);
+				bound = true;
+				break;
+			}
+		}
+	}
+
+	bool const moving = (x != 0 || y != 0);
+	if (moving) {
+		facing = Scroll_Facing(x, y);
+	}
+
+	// A held pair that cancels, such as north and south, is not a release: the view stops
+	// instead of coasting on in the direction it had.
+	if (moving || (inertia > 0 && !bound)) {
+		int rate = 8 - inertia;
+		if (rate < Options.ScrollRate + 1) {
+			rate = Options.ScrollRate + 1;
+			inertia = 8 - rate;
+		}
+
+		int distance = 1;
+		if (Map.Scroll_Map(facing, distance, false)) {
+			int step = int(ScrollSteps[rate] * Rule->ScrollMultiplier);
+			double scaled = step * _ScrollFraction + remainder;
+			distance = int(scaled);
+			remainder = scaled - distance;
+			Map.Scroll_Map(facing, distance, true);
+
+			if (counter == 0 && moving) {
+				counter = SCROLL_DELAY;
+				inertia++;
+			}
+		}
+	}
+
+	if (!moving && !counter) {
+		inertia--;
+		if (inertia < 0) {
+			inertia++;
+		}
+		counter = SCROLL_DELAY;
+	}
+}
+
+
 /// <summary>
 /// Handles scrolling the map when the mouse rests against a screen edge.
 /// The direction is taken from where the cursor sits, biased toward the cardinal directions
@@ -463,18 +602,6 @@ void ScrollClass::Scroll_Edge(Point2D const & point)
 				**	The mouse is over a scroll region so set the mouse shape accordingly if the map
 				**	can be scrolled in the direction indicated.
 				*/
-				static int _rate[9] = {
-					0x00E0*2,
-					0x00C0*2,
-					0x00A0*2,
-					0x0080*2,
-					0x0060*2,
-					0x0040*2,
-					0x0020*2,
-					0x0010*2,
-					0x0008*2
-				};
-
 				int rate = 8-Inertia;
 
 				if (rate < Options.ScrollRate+1) {
@@ -486,7 +613,7 @@ void ScrollClass::Scroll_Edge(Point2D const & point)
 				**	Increase the scroll rate if the mouse button is held down.
 				*/
 				if (Keyboard->Down(KN_RMOUSE)) {
-					rate = std::clamp(rate+1, 4, (int)(sizeof(_rate)/sizeof(_rate[0]))-1);
+					rate = std::clamp(rate+1, 4, (int)(sizeof(ScrollSteps) / sizeof(ScrollSteps[0])) - 1);
 				}
 
 				/*
@@ -503,7 +630,7 @@ void ScrollClass::Scroll_Edge(Point2D const & point)
 				} else {
 					Override_Mouse_Shape((MouseType)(MOUSE_N+control), false);
 
-					int step = int(_rate[rate] * Rule->ScrollMultiplier);
+					int step = int(ScrollSteps[rate] * Rule->ScrollMultiplier);
 					double scaled = step * _ScrollFraction + _EdgeScrollRemainder;
 					distance = int(scaled);
 					_EdgeScrollRemainder = scaled - distance;
@@ -541,6 +668,8 @@ void ScrollClass::Scroll_AI(void)
 	_LastScrollPollTime = now;
 
 	if (!IgnoreInput) {
+		Scroll_Keyboard();
+
 		Point2D tacti = TacticalRect.Top_Left();
 		Point2D mouse = MouseCursor->Get_Mouse_Point();
 		Point2D point = mouse - tacti;

@@ -163,6 +163,12 @@ class OptionsClass {
 		bool NowPlaying;
 
 		/*
+		 * If holding a scroll key pans the view, then this flag will be true. While it is
+		 * false, a scroll key moves the view one step.
+		 */
+		bool ScrollWhileHeld;
+
+		/*
 		 * If the local Discord client shows the current activity, then this flag will be true.
 		 */
 		bool DiscordPresence;
