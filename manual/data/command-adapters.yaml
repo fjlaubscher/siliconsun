@@ -384,6 +384,15 @@ fixed_exclusions:
       - { file: code/sdl/sdlinput.cpp, function: SDLInputStateClass::Modifiers, expression: VK_MENU }
     reason: SDL-layer modifier state attached to key and mouse events, not controls.
   - sites:
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: KN_SHIFT_BIT }
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: KN_CTRL_BIT }
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: KN_ALT_BIT }
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: VK_SHIFT }
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: VK_CONTROL }
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: VK_MENU }
+      - { file: code/scroll.cpp, function: Scroll_Chord_Down, expression: VK_SHIFT+VK_CONTROL+VK_MENU }
+    reason: Matches the Shift, Ctrl, and Alt bits stored on a scroll-key binding. The modifiers are not controls of their own.
+  - sites:
       - { file: code/sdl/sdlinput.cpp, function: SDLInputStateClass::Key_Toggled, expression: VK_CAPITAL }
       - { file: code/sdl/sdlinput.cpp, function: SDLInputStateClass::Key_Toggled, expression: VK_NUMLOCK }
       - { file: code/sdl/sdlinput.cpp, function: SDLInputStateClass::Key_Toggled, expression: VK_SCROLL }
