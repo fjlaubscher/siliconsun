@@ -45,6 +45,7 @@
 #include "_rules.h"
 #include "_surface.h"
 #include "_tactica.h"
+#include "_ui.h"
 #include "building.h"
 #include "cell.h"
 #include "command.h"
@@ -406,16 +407,16 @@ ActionType ScrollClass::What_Action(Cell const & cell, ObjectClass * object, boo
 
 static bool Scroll_Chord_Down(int key)
 {
-	if (!Keyboard->Down(key & 0xFF)) {
+	if (!Keyboard->Down((KeyNumType)(key & 0xFF))) {
 		return(false);
 	}
 
 	bool const shift = (key & KN_SHIFT_BIT) != 0;
 	bool const ctrl = (key & KN_CTRL_BIT) != 0;
 	bool const alt = (key & KN_ALT_BIT) != 0;
-	return(shift == (Keyboard->Down(VK_SHIFT) != 0)
-		&& ctrl == (Keyboard->Down(VK_CONTROL) != 0)
-		&& alt == (Keyboard->Down(VK_MENU) != 0));
+	return(shift == (Keyboard->Down(KN_LSHIFT) != 0)
+		&& ctrl == (Keyboard->Down(KN_LCTRL) != 0)
+		&& alt == (Keyboard->Down(KN_LALT) != 0));
 }
 
 
