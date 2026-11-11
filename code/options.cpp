@@ -132,6 +132,7 @@ OptionsClass::OptionsClass(void) :
 	DoubleClickSelectType(true),
 	CampaignIntroMovie(true),
 	NowPlaying(true),
+	ScrollWhileHeld(true),
 	DiscordPresence(true),
 	PersistSkirmishSettings(true),
 	OverrideSkirmishDefaults(true),
@@ -442,6 +443,9 @@ void OptionsClass::Load_Settings(void)
 	NowPlaying = ConfigINI.Get_Bool("siliconsun", "NowPlaying", NowPlaying);
 	DebugString("NowPlaying is %s\n", NowPlaying == true ? "ON" : "OFF");
 
+	ScrollWhileHeld = ConfigINI.Get_Bool("siliconsun", "ScrollWhileHeld", ScrollWhileHeld);
+	DebugString("ScrollWhileHeld is %s\n", ScrollWhileHeld == true ? "ON" : "OFF");
+
 	DiscordPresence = ConfigINI.Get_Bool("siliconsun", "DiscordPresence", DiscordPresence);
 	DebugString("DiscordPresence is %s\n", DiscordPresence == true ? "ON" : "OFF");
 
@@ -547,6 +551,7 @@ void OptionsClass::Save_Settings (void)
 	ConfigINI.Put_Bool("siliconsun", "DoubleClickSelectType", DoubleClickSelectType);
 	ConfigINI.Put_Bool("siliconsun", "CampaignIntroMovie", CampaignIntroMovie);
 	ConfigINI.Put_Bool("siliconsun", "NowPlaying", NowPlaying);
+	ConfigINI.Put_Bool("siliconsun", "ScrollWhileHeld", ScrollWhileHeld);
 	ConfigINI.Put_Bool("siliconsun", "DiscordPresence", DiscordPresence);
 	ConfigINI.Put_Bool("siliconsun", "PersistSkirmishSettings", PersistSkirmishSettings);
 	ConfigINI.Put_Bool("siliconsun", "OverrideSkirmishDefaults", OverrideSkirmishDefaults);
